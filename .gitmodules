@@ -1,0 +1,3 @@
+[submodule "BNetClassicChat"]
+	path = BNetClassicChat
+	url = https://github.com/LiquidWater/BNetClassicChat
