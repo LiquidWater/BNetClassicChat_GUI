@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BNetClassicChat_ClientAPI;
+using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BNetClassicChat_GUI
@@ -16,7 +15,11 @@ namespace BNetClassicChat_GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainWindow());
+
+            string apiKey = File.ReadAllLines("Config/APIKey.txt")[0];
+
+            BNetClassicChat_Client api = new BNetClassicChat_Client(apiKey);
         }
     }
 }
