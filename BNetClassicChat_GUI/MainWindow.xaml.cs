@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BNetClassicChat_ClientAPI;
+using System.Diagnostics;
 
 namespace BNetClassicChat_GUI
 {
@@ -23,6 +25,25 @@ namespace BNetClassicChat_GUI
         public MainWindow()
         {
             InitializeComponent();
+            ChatScrollBox.Content = "Test\n";
+            UserScrollBox.Content = "Test2\n";
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine(e.Source);
+            ChatScrollBox.Content += "test\n";
+        }
+
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine(e.Source);
+            UserScrollBox.Content += "test2\n";
         }
     }
 }
