@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BNetClassicChat_GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1024" ResizeMode="NoResize"
+        Title="MainWindow" Height="600" Width="1024" ResizeMode="NoResize"
         >
     <Grid>
         <ScrollViewer Name="ChatScrollBox" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="766" Margin="240,60,0,0"/>
         <ScrollViewer Name ="UserScrollBox" HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="210" Margin="10,60,0,0"/>
-        <TextBox Name="InputTextBox" HorizontalAlignment="Left" Height="120" TextWrapping="Wrap" Text="TEST TEXT BOX" VerticalAlignment="Top" Width="540" Margin="10,515,0,0" TextChanged="TextBox_TextChanged"/>
-        <Button Name="SendButton" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="580,515,0,0" Click="SendButton_Click"/>
+        <TextBox Name="InputTextBox" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="916" Margin="10,515,0,0" KeyDown="InputTextBox_KeyDown"/>
+        <Button Name="SendButton" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="931,515,0,0" Click="SendButton_Click"/>
         <Label Content="API Key:" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Width="55" Margin="10,10,0,0" RenderTransformOrigin="0.545,1.48"/>
         <Button Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="931,10,0,0" RenderTransformOrigin="0.533,2.85" Click="ConnectButton_Click"/>
-        <PasswordBox Name="PasswordBox" HorizontalAlignment="Left" Height ="25" Width="856" Margin="70,10,0,702"/>
+        <PasswordBox Name="APIKeyBox" HorizontalAlignment="Left" Height ="25" Width="856" Margin="70,10,0,702"/>
 
     </Grid>
 </Window>

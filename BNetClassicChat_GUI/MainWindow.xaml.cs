@@ -22,28 +22,56 @@ namespace BNetClassicChat_GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private BNetClassicChat_Client client;
+        private bool isConnected = false;
+
         public MainWindow()
         {
             InitializeComponent();
-            ChatScrollBox.Content = "Test\n";
-            UserScrollBox.Content = "Test2\n";
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine(e.Source);
-            ChatScrollBox.Content += "test\n";
+            string msg = InputTextBox.Text;
+            InputTextBox.Text = "";
+            Debug.WriteLine("Message " + msg + " from " + e.Source);
         }
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine(e.Source);
-            UserScrollBox.Content += "test2\n";
+
+            if (!isConnected)
+            {
+                Debug.WriteLine("Connecting with API Key [" + APIKeyBox.Password + "]");
+                Init_Client();
+                ConnectButton.Content = "Disconect";
+                isConnected = true;
+            }
+            else
+            {
+                Debug.WriteLine("Disconnecting");
+                Dispose_Client();
+                ConnectButton.Content = "Connect";
+                isConnected = false;
+            }
+
+        }
+
+        private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+                SendButton_Click(sender, e);
+        }
+
+        private void Init_Client()
+        {
+            client = new BNetClassicChat_Client(APIKeyBox.Password);
+        }
+
+        private void Dispose_Client()
+        {
+
         }
     }
 }
