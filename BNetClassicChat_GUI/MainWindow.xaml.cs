@@ -32,7 +32,14 @@ namespace BNetClassicChat_GUI
             }
             string msg = InputTextBox.Text;
             InputTextBox.Text = "";
-            Debug.WriteLine("[GUI]Message " + msg + " from " + e.Source);
+            client.SendMessage(msg);
+
+            this.Dispatcher.Invoke(() =>
+            {
+                ChatScrollBox.Content += "[SELF]: " + msg + "\n";
+            });
+
+            Debug.WriteLine("[GUI]Message \"" + msg + "\" from " + e.Source);
         }
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
