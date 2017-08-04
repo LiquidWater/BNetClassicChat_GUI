@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using BNetClassicChat_ClientAPI;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace BNetClassicChat_GUI
 {
@@ -33,12 +34,8 @@ namespace BNetClassicChat_GUI
             string msg = InputTextBox.Text;
             InputTextBox.Text = "";
             client.SendMessage(msg);
-
-            this.Dispatcher.Invoke(() =>
-            {
-                ChatScrollBox.Content += "[SELF]: " + msg + "\n";
-            });
-
+            ChatScrollBox.Content += "[SELF]: " + msg + "\n";
+ 
             Debug.WriteLine("[GUI]Message \"" + msg + "\" from " + e.Source);
         }
 
@@ -72,14 +69,15 @@ namespace BNetClassicChat_GUI
         }
         #endregion
 
-        #region Private Helpers
+        #region PrivateHelpers
         private bool Init_Client()
         {
+            //TODO: Better data structure to store more user data such as mod status
             idToName = new Dictionary<ulong, string>();
             client = new BNetClassicChat_Client(APIKeyBox.Password);
             client.OnChannelJoin += (obj, e) =>
             {
-                this.Dispatcher.Invoke(() =>
+                Dispatcher.Invoke(() =>
                 {
                     ChannelNameLabel.Content = "Channel: " + e.ChannelName;
                     ChatScrollBox.Content += "[SYSTEM] Joined channel " + e.ChannelName + "\n";
@@ -99,7 +97,7 @@ namespace BNetClassicChat_GUI
 
                 }
 
-                this.Dispatcher.Invoke(() => 
+                Dispatcher.Invoke(() => 
                 {
                     ChatScrollBox.Content += username + ": " + e.Message + "\n";
                 });
@@ -117,7 +115,7 @@ namespace BNetClassicChat_GUI
 
                 }
 
-                this.Dispatcher.Invoke(() =>
+                Dispatcher.Invoke(() =>
                 {
                     Update_User_View();
                     ChatScrollBox.Content += "[SYSTEM]" + e.ToonName + " has joined.\n";
@@ -128,11 +126,12 @@ namespace BNetClassicChat_GUI
             {
                 try
                 {
+                    string tempusername = idToName[e.UserId];
                     idToName.Remove(e.UserId);
-                    this.Dispatcher.Invoke(() =>
+                    Dispatcher.Invoke(() =>
                     {
                         Update_User_View();
-                        ChatScrollBox.Content += "[SYSTEM]" + idToName[e.UserId] + " has left.\n";
+                        ChatScrollBox.Content += "[SYSTEM]" + tempusername + " has left.\n";
                     });
                 }
                 catch (Exception)
@@ -147,10 +146,12 @@ namespace BNetClassicChat_GUI
             return true;
         }
 
+        //These methods to be called within a GUI dispatcher thread
         private void Dispose_Client()
         {
             client.Disconnect();
             UserScrollBox.Content = "";
+            ChatScrollBox.Content += "Disconnected!";
             ChannelNameLabel.Content = "Channel: Not Connected";
         }
 
