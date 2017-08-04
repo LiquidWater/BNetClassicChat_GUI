@@ -25,6 +25,11 @@ namespace BNetClassicChat_GUI
             InitializeComponent();
         }
 
+        private void WhisperButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Add in whisper functionality to GUI
+        }
+
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
             if (!isConnected)
@@ -77,11 +82,11 @@ namespace BNetClassicChat_GUI
             client = new BNetClassicChat_Client(APIKeyBox.Password);
             client.OnChannelJoin += (obj, e) =>
             {
-                Dispatcher.Invoke(() =>
+                Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
                 {
                     ChannelNameLabel.Content = "Channel: " + e.ChannelName;
                     ChatScrollBox.Content += "[SYSTEM] Joined channel " + e.ChannelName + "\n";
-                });
+                }));
                 
             };
 
@@ -91,17 +96,15 @@ namespace BNetClassicChat_GUI
                 try
                 {
                     username = idToName[e.UserId];
+                    Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
+                    {
+                        ChatScrollBox.Content += username + ": " + e.Message + "\n";
+                    }));
                 }
                 catch (Exception)
                 {
-
+                    Debug.WriteLine("[GUI]Userid [" + e.UserId + "] not found");
                 }
-
-                Dispatcher.Invoke(() => 
-                {
-                    ChatScrollBox.Content += username + ": " + e.Message + "\n";
-                });
-                
             };
 
             client.OnUserJoin += (obj, e) =>
@@ -109,17 +112,16 @@ namespace BNetClassicChat_GUI
                 try
                 {
                     idToName.Add(e.UserId, e.ToonName);
+                    Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
+                    {
+                        Update_User_View();
+                        ChatScrollBox.Content += "[SYSTEM]" + e.ToonName + " has joined.\n";
+                    }));
                 }
                 catch (Exception)
                 {
-
+                    Debug.WriteLine("[GUI]Userid [" + e.UserId + "] already exists");
                 }
-
-                Dispatcher.Invoke(() =>
-                {
-                    Update_User_View();
-                    ChatScrollBox.Content += "[SYSTEM]" + e.ToonName + " has joined.\n";
-                });
             };
 
             client.OnUserLeave += (obj, e) =>
@@ -128,15 +130,15 @@ namespace BNetClassicChat_GUI
                 {
                     string tempusername = idToName[e.UserId];
                     idToName.Remove(e.UserId);
-                    Dispatcher.Invoke(() =>
+                    Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
                     {
                         Update_User_View();
                         ChatScrollBox.Content += "[SYSTEM]" + tempusername + " has left.\n";
-                    });
+                    }));
                 }
                 catch (Exception)
                 {
-
+                    Debug.WriteLine("[GUI]Userid [" + e.UserId + "] cannot be deleted");
                 }
             };
 
