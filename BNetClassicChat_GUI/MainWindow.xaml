@@ -7,7 +7,7 @@
         Title="MainWindow" Height="600" Width="1024" ResizeMode="NoResize"
         >
     <Grid>
-        <ScrollViewer Name="ChatScrollBox" HorizontalAlignment="Left" Height="379" VerticalAlignment="Top" Width="766" Margin="240,101,0,0"/>
+        <ScrollViewer Name="ChatScrollBox" HorizontalAlignment="Left" Height="379" VerticalAlignment="Top" Width="766" Margin="240,101,0,0" ScrollChanged="Scrollviewer_Messages_ScrollChanged"/>
         <ScrollViewer Name ="UserScrollBox" HorizontalAlignment="Left" Height="379" VerticalAlignment="Top" Width="210" Margin="10,101,0,0"/>
         <TextBox Name="InputTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="880" Margin="10,515,0,0" KeyDown="InputTextBox_KeyDown" Height="20"/>
         <Button Name="SendButton" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="920,515,0,0" Click="SendButton_Click"/>

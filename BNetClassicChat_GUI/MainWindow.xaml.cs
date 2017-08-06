@@ -5,6 +5,7 @@ using System.Windows.Input;
 using BNetClassicChat_ClientAPI;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace BNetClassicChat_GUI
 {
@@ -38,7 +39,7 @@ namespace BNetClassicChat_GUI
             }
             string msg = InputTextBox.Text;
             InputTextBox.Text = "";
-            client.SendMessage(msg);
+            client.SendMessageAsync(msg);
             ChatScrollBox.Content += "[SELF]: " + msg + "\n";
  
             Debug.WriteLine("[GUI]Message \"" + msg + "\" from " + e.Source);
@@ -142,7 +143,7 @@ namespace BNetClassicChat_GUI
                 }
             };
 
-            client.Connect();
+            client.ConnectAsync();
 
             //TODO: some sort of way to figure out when the connection fails
             return true;
@@ -151,7 +152,7 @@ namespace BNetClassicChat_GUI
         //These methods to be called within a GUI dispatcher thread
         private void Dispose_Client()
         {
-            client.Disconnect();
+            client.DisconnectAsync();
             UserScrollBox.Content = "";
             ChatScrollBox.Content += "Disconnected!";
             ChannelNameLabel.Content = "Channel: Not Connected";
@@ -165,6 +166,35 @@ namespace BNetClassicChat_GUI
             {
                 UserScrollBox.Content += k.Value + "\n";
             }
+        }
+
+        //From https://stackoverflow.com/questions/25761795/doing-autoscroll-with-scrollviewer-scrolltoend-only-worked-while-debugging-ev
+        /// <summary>
+        /// If the scrollviewer is at the bottom, keep the bottom in view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Scrollviewer_Messages_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ScrollViewer sv = sender as ScrollViewer;
+            bool AutoScrollToEnd = true;
+            if (sv.Tag != null)
+            {
+                AutoScrollToEnd = (bool)sv.Tag;
+            }
+            if (e.ExtentHeightChange == 0)// user scroll
+            {
+                AutoScrollToEnd = sv.ScrollableHeight == sv.VerticalOffset;
+            }
+            else// content change
+            {
+                if (AutoScrollToEnd)
+                {
+                    sv.ScrollToEnd();
+                }
+            }
+            sv.Tag = AutoScrollToEnd;
+            return;
         }
         #endregion
     }
