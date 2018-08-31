@@ -32,6 +32,11 @@ namespace BNetClassicChat_GUI
             //TODO: Add in whisper functionality to GUI
         }
 
+        private void EmoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Add in emote functionality to GUI
+        }
+
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
             if (!isConnected)
@@ -49,21 +54,25 @@ namespace BNetClassicChat_GUI
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine(e.Source);
-
-            if (!isConnected)
+            if (!string.IsNullOrEmpty(APIKeyBox.Password))
             {
-                Debug.WriteLine("[GUI]Connecting with API Key [" + APIKeyBox.Password + "]");
-                client.APIKey = APIKeyBox.Password;
-                client.ConnectAsync();
-                ConnectButton.IsEnabled = false;
-                ConnectButton.Opacity = 0.5;
-            }
-            else
-            {
-                Debug.WriteLine("[GUI]Disconnecting");
-                client.DisconnectAsync();
-                ConnectButton.IsEnabled = false;
-                ConnectButton.Opacity = 0.5;
+                if (!isConnected)
+                {
+                    Debug.WriteLine("[GUI]Connecting with API Key [" + APIKeyBox.Password + "]");
+                    client.APIKey = APIKeyBox.Password;
+                    client.ConnectAsync();
+                    ConnectButton.IsEnabled = false;
+                    ConnectButton.Opacity = 0.5;
+                    APIKeyBox.IsEnabled = false;
+                    APIKeyBox.Opacity = 0.5;
+                }
+                else
+                {
+                    Debug.WriteLine("[GUI]Disconnecting");
+                    client.DisconnectAsync();
+                    ConnectButton.IsEnabled = false;
+                    ConnectButton.Opacity = 0.5;
+                }
             }
         }
 
@@ -102,6 +111,8 @@ namespace BNetClassicChat_GUI
                     ChannelNameLabel.Content = "Channel: Not Connected";
                     ChatScrollBox.Content += "[SYSTEM] Disconnected. Error code: " + e.Code + ". Reason: " + e.Reason + "\n";
                     UserScrollBox.Content = "";
+                    APIKeyBox.IsEnabled = true;
+                    APIKeyBox.Opacity = 1.0;
                     ConnectButton.IsEnabled = true;
                     ConnectButton.Opacity = 1.0;
                     ConnectButton.Content = "Connect";
