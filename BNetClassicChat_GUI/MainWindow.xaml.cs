@@ -34,7 +34,16 @@ namespace BNetClassicChat_GUI
 
         private void EmoteButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Add in emote functionality to GUI
+            if (!isConnected)
+            {
+                return;
+            }
+            string msg = InputTextBox.Text;
+            InputTextBox.Text = "";
+            client.SendEmoteAsync(msg);
+            ChatScrollBox.Content += "[SELF]: " + msg + "\n";
+
+            Debug.WriteLine("[GUI]Emote Message \"" + msg + "\" from " + e.Source);
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
@@ -53,7 +62,6 @@ namespace BNetClassicChat_GUI
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine(e.Source);
             if (!string.IsNullOrEmpty(APIKeyBox.Password))
             {
                 if (!isConnected)

@@ -4,16 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1024" ResizeMode="NoResize"
+        Title="MainWindow" Height="610" Width="1024" ResizeMode="NoResize"
         >
-    <Grid>
+    <Grid Height="600" VerticalAlignment="Top">
         <ScrollViewer Name="ChatScrollBox" HorizontalAlignment="Left" Height="379" VerticalAlignment="Top" Width="766" Margin="240,101,0,0" ScrollChanged="Scrollviewer_Messages_ScrollChanged"/>
-        <ScrollViewer Name ="UserScrollBox" HorizontalAlignment="Left" Height="379" VerticalAlignment="Top" Width="210" Margin="10,101,0,0"/>
+        <ScrollViewer Name ="UserScrollBox" HorizontalAlignment="Left" Height="379" VerticalAlignment="Top" Width="210" Margin="10,101,0,0">
+        </ScrollViewer>
         <TextBox Name="InputTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="880" Margin="10,515,0,0" KeyDown="InputTextBox_KeyDown" Height="20"/>
         <Button Name="SendButton" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="920,515,0,0" Click="SendButton_Click"/>
+        <Button Name="EmoteButton" Content="Send Emote" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="920,541,0,0" Click="EmoteButton_Click" Width="75"/>
         <Label Content="API Key:" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Width="55" Margin="10,10,0,0" RenderTransformOrigin="0.545,1.48"/>
         <Button Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="920,15,0,0" RenderTransformOrigin="0.533,2.85" Click="ConnectButton_Click"/>
-        <PasswordBox Name="APIKeyBox" HorizontalAlignment="Left" Width="805" Margin="85,15,0,526"/>
+        <PasswordBox Name="APIKeyBox" HorizontalAlignment="Left" Width="805" Margin="85,15,0,565"/>
         <Label Content="Users" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.447,3.846" Margin="10,70,0,0" Width="210"/>
         <Label Name="ChannelNameLabel" Content="Channel: Not Connected" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="7.895,3.077" Margin="240,70,0,0" Width="766"/>
 
