@@ -15,7 +15,7 @@ namespace BNetClassicChat_GUI
     public partial class MainWindow : Window
     {
         #region PrivateFields
-        private BNetClassicChat_Client client;
+        private BNetClassicChat_Client client = new BNetClassicChat_Client();
         private bool isConnected = false;
         private Dictionary<ulong, string> idToName;
         #endregion
@@ -24,6 +24,7 @@ namespace BNetClassicChat_GUI
         public MainWindow()
         {
             InitializeComponent();
+            Init_Client();
         }
 
         private void WhisperButton_Click(object sender, RoutedEventArgs e)
@@ -52,20 +53,18 @@ namespace BNetClassicChat_GUI
             if (!isConnected)
             {
                 Debug.WriteLine("[GUI]Connecting with API Key [" + APIKeyBox.Password + "]");
-                if (Init_Client())
-                {
-                    ConnectButton.Content = "Disconnect";
-                    isConnected = true;
-                }
+                client.APIKey = APIKeyBox.Password;
+                client.ConnectAsync();
+                ConnectButton.IsEnabled = false;
+                ConnectButton.Opacity = 0.5;
             }
             else
             {
                 Debug.WriteLine("[GUI]Disconnecting");
-                Dispose_Client();
-                ConnectButton.Content = "Connect";
-                isConnected = false;
+                client.DisconnectAsync();
+                ConnectButton.IsEnabled = false;
+                ConnectButton.Opacity = 0.5;
             }
-
         }
 
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -76,19 +75,37 @@ namespace BNetClassicChat_GUI
         #endregion
 
         #region PrivateHelpers
-        private bool Init_Client()
+        private void Init_Client()
         {
             //TODO: Better data structure to store more user data such as mod status
             idToName = new Dictionary<ulong, string>();
-            client = new BNetClassicChat_Client(APIKeyBox.Password);
             client.OnChannelJoin += (obj, e) =>
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
                 {
+                    isConnected = true;
                     ChannelNameLabel.Content = "Channel: " + e.ChannelName;
                     ChatScrollBox.Content += "[SYSTEM] Joined channel " + e.ChannelName + "\n";
+                    ConnectButton.IsEnabled = true;
+                    ConnectButton.Opacity = 1.0;
+                    ConnectButton.Content = "Disconnect";
                 }));
-                
+
+            };
+
+            client.OnDisconnect += (obj, e) =>
+            {
+                idToName.Clear();
+                Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
+                {
+                    isConnected = false;
+                    ChannelNameLabel.Content = "Channel: Not Connected";
+                    ChatScrollBox.Content += "[SYSTEM] Disconnected. Error code: " + e.Code + ". Reason: " + e.Reason + "\n";
+                    UserScrollBox.Content = "";
+                    ConnectButton.IsEnabled = true;
+                    ConnectButton.Opacity = 1.0;
+                    ConnectButton.Content = "Connect";
+                }));
             };
 
             client.OnChatMessage += (obj, e) =>
@@ -142,20 +159,6 @@ namespace BNetClassicChat_GUI
                     Debug.WriteLine("[GUI]Userid [" + e.UserId + "] cannot be deleted");
                 }
             };
-
-            client.ConnectAsync();
-
-            //TODO: some sort of way to figure out when the connection fails
-            return true;
-        }
-
-        //These methods to be called within a GUI dispatcher thread
-        private void Dispose_Client()
-        {
-            client.DisconnectAsync();
-            UserScrollBox.Content = "";
-            ChatScrollBox.Content += "Disconnected!";
-            ChannelNameLabel.Content = "Channel: Not Connected";
         }
 
         //Updates the scrollbar that contains the list of users in channel
