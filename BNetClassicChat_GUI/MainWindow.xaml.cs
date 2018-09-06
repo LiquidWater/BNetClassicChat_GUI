@@ -41,9 +41,8 @@ namespace BNetClassicChat_GUI
             string msg = InputTextBox.Text;
             InputTextBox.Text = "";
             client.SendEmoteAsync(msg);
-            ChatScrollBox.Content += "[SELF]: " + msg + "\n";
 
-            Debug.WriteLine("[GUI]Emote Message \"" + msg + "\" from " + e.Source);
+            Debug.WriteLine("[GUI]Emote \"" + msg + "\" from " + e.Source);
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
@@ -118,12 +117,12 @@ namespace BNetClassicChat_GUI
                     isConnected = false;
                     ChannelNameLabel.Content = "Channel: Not Connected";
                     ChatScrollBox.Content += "[SYSTEM] Disconnected. Error code: " + e.Code + ". Reason: " + e.Reason + "\n";
-                    UserScrollBox.Content = "";
                     APIKeyBox.IsEnabled = true;
                     APIKeyBox.Opacity = 1.0;
                     ConnectButton.IsEnabled = true;
                     ConnectButton.Opacity = 1.0;
                     ConnectButton.Content = "Connect";
+                    Update_User_View();
                 }));
             };
 
@@ -135,7 +134,7 @@ namespace BNetClassicChat_GUI
                     username = idToName[e.UserId];
                     Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action)(() =>
                     {
-                        ChatScrollBox.Content += username + ": " + e.Message + "\n";
+                        ChatScrollBox.Content += $"[{e.MessageTypeAsString}] {username}: {e.Message}\n";
                     }));
                 }
                 catch (Exception)
